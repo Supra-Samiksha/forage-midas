@@ -1,13 +1,21 @@
 package com.jpmc.midascore.foundation;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Transaction {
+    
+    @JsonProperty("senderId")
     private long senderId;
+
+    @JsonProperty("recipientId")
     private long recipientId;
+
+    @JsonProperty("amount")
     private float amount;
 
+    // Default constructor is REQUIRED for Jackson/Kafka deserialization
     public Transaction() {
     }
 
@@ -17,24 +25,26 @@ public class Transaction {
         this.amount = amount;
     }
 
+    // Getters
     public long getSenderId() {
         return senderId;
-    }
-
-    public void setSenderId(long senderId) {
-        this.senderId = senderId;
     }
 
     public long getRecipientId() {
         return recipientId;
     }
 
-    public void setRecipientId(long recipientId) {
-        this.recipientId = recipientId;
-    }
-
     public float getAmount() {
         return amount;
+    }
+
+    // Setters
+    public void setSenderId(long senderId) {
+        this.senderId = senderId;
+    }
+
+    public void setRecipientId(long recipientId) {
+        this.recipientId = recipientId;
     }
 
     public void setAmount(float amount) {
@@ -43,6 +53,8 @@ public class Transaction {
 
     @Override
     public String toString() {
-        return "Transaction {senderId=" + senderId + ", recipientId=" + recipientId + ", amount=" + amount + "}";
+        return "Transaction {senderId=" + senderId + 
+               ", recipientId=" + recipientId + 
+               ", amount=" + amount + "}";
     }
 }

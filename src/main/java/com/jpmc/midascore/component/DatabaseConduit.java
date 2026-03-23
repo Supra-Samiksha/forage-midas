@@ -30,4 +30,7 @@ public class DatabaseConduit {
     public UserRecord findById(long id) {
         return userRepository.findById(id).orElse(null);
     }
+    public Iterable<UserRecord> findAll() {
+        return userRepository.findAll();
+}
 }
