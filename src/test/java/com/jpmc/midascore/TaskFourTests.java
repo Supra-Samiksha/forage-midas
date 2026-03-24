@@ -23,24 +23,47 @@ public class TaskFourTests {
     @Autowired
     private FileLoader fileLoader;
 
+   @Autowired
+    private com.jpmc.midascore.component.DatabaseConduit databaseConduit;
+
     @Test
     void task_four_verifier() throws InterruptedException {
+        // 1. Setup Data
         userPopulator.populate();
+        
+        // 2. Send Transactions (The new file for Task 4)
         String[] transactionLines = fileLoader.loadStrings("/test_data/alskdjfh.fhdjsk");
         for (String transactionLine : transactionLines) {
             kafkaProducer.send(transactionLine);
         }
-        Thread.sleep(2000);
 
+        // 3. Wait for Kafka and the External API to finish
+        logger.info("Processing Task 4 transactions... waiting 20 seconds.");
+        Thread.sleep(20000); 
 
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("----------------------------------------------------------");
-        logger.info("use your debugger to find out what wilbur's balance is after all transactions are processed");
-        logger.info("kill this test once you find the answer");
-        while (true) {
-            Thread.sleep(20000);
-            logger.info("...");
+        // 4. Find Wilbur and Print the Answer
+        System.err.println("##########################################");
+        boolean found = false;
+        // Search through IDs to find Wilbur
+        for (long i = 1; i <= 100; i++) {
+            com.jpmc.midascore.entity.UserRecord user = databaseConduit.findById(i);
+            if (user != null && "wilbur".equalsIgnoreCase(user.getName())) {
+                float balance = user.getBalance();
+                int submissionCode = (int) Math.floor(balance);
+                
+                System.err.println("!!! TASK 4 RESULT !!!");
+                System.err.println("WILBUR FINAL BALANCE: " + balance);
+                System.err.println("YOUR SUBMISSION CODE: " + submissionCode);
+                found = true;
+                break;
+            }
         }
+
+        if (!found) {
+            System.err.println("ERROR: Wilbur not found in DB.");
+        }
+        System.err.println("##########################################");
+        
+        // No more while(true) - the test will now finish on its own!
     }
 }
